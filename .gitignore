@@ -1,0 +1,42 @@
+# Environment / secrets
+.env
+.env.*
+!.env.example
+
+# Dependencies and builds
+node_modules/
+dist/
+build/
+coverage/
+
+# Logs and temporary/cache files
+logs/
+*.log
+*.tmp
+*.temp
+.cache/
+
+# Editor/local tooling
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# Tests (kept locally; excluded from the published source repository)
+tests/
+test/
+__tests__/
+*.test.*
+*.spec.*
+
+# AI/development assistant material
+.agents/
+agents/
+AGENTS.md
+*.agent.md
+
+# Local documentation excluded from publication
+README.md
+README
+README.MD
+readme.md

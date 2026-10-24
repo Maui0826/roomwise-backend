@@ -1,0 +1,53 @@
+{
+  "name": "booking-management-backend",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=22.0.0"
+  },
+  "scripts": {
+    "dev": "tsx watch src/server.ts",
+    "build": "tsc -p tsconfig.json",
+    "start": "node dist/server.js",
+    "typecheck": "tsc --noEmit -p tsconfig.test.json",
+    "lint": "eslint .",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "test": "vitest run --maxWorkers=1 --testTimeout=15000",
+    "admin:create": "node dist/scripts/create-admin.js",
+    "worker": "node dist/worker.js",
+    "worker:dev": "tsx watch src/worker.ts"
+  },
+  "dependencies": {
+    "argon2": "^0.45.1",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.7",
+    "express": "^5.1.0",
+    "express-rate-limit": "^8.7.1",
+    "googleapis": "^186.0.0",
+    "helmet": "^8.1.0",
+    "luxon": "^3.7.2",
+    "mongoose": "^9.0.0",
+    "pino": "^9.6.0",
+    "pino-http": "^10.4.0",
+    "zod": "^3.24.2"
+  },
+  "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "@types/cors": "^2.8.17",
+    "@types/express": "^5.0.1",
+    "@types/luxon": "^3.7.6",
+    "@types/node": "^22.13.10",
+    "@types/supertest": "^7.2.1",
+    "eslint": "^10.13.0",
+    "eslint-config-prettier": "^10.1.1",
+    "mongodb-memory-server": "^11.3.0",
+    "prettier": "^3.5.3",
+    "supertest": "^7.3.1",
+    "tsx": "^4.19.3",
+    "typescript": "^5.8.2",
+    "typescript-eslint": "^8.26.1",
+    "vitest": "^5.0.5"
+  }
+}
