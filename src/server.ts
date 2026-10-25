@@ -2,7 +2,7 @@ import 'dotenv/config';
 import { createServer } from 'node:http';
 import { app } from './app.js';
 import { connectDatabase, disconnectDatabase } from './config/database.js';
-import { env } from './config/env.js';
+import { WorkerConfigurationError, env } from './config/env.js';
 import { logger } from './config/logger.js';
 import { createInternalWorkerRouter } from './modules/internal/worker-tick.routes.js';
 import type { WorkerHandle } from './worker-process.js';
@@ -88,10 +88,7 @@ try {
   // Mount the internal scheduler tick router. Pass the worker handle so
   // the route can delegate bounded processing. When embeddedWorker is null
   // (worker not running in this process), the route returns 503.
-  app.use(
-    '/api/internal/worker',
-    createInternalWorkerRouter(embeddedWorker),
-  );
+  app.use('/api/internal/worker', createInternalWorkerRouter(embeddedWorker));
 
   // Bind to 0.0.0.0 so Render's port scanner detects the open port.
   // Render supplies PORT at runtime; 3000 is used as a local fallback only.
@@ -105,7 +102,15 @@ try {
   const startupError =
     env.NODE_ENV === 'development'
       ? { err: error }
-      : { errorName: error instanceof Error ? error.name : 'UnknownError' };
+      : {
+          errorName: error instanceof Error ? error.name : 'UnknownError',
+          ...(error instanceof WorkerConfigurationError
+            ? {
+                component: 'embedded-worker',
+                configurationIssue: error.message,
+              }
+            : {}),
+        };
   logger.fatal(startupError, 'Application startup failed');
   await disconnectDatabase().catch((disconnectError: unknown) => {
     logger.error(

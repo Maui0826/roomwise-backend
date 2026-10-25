@@ -134,6 +134,17 @@ export function googleDirectoryConfig(
   };
 }
 
+/**
+ * A worker startup configuration failure whose message contains only safe
+ * validation information (variable names or a validation rule), never values.
+ */
+export class WorkerConfigurationError extends Error {
+  constructor(message: string) {
+    super(message);
+    this.name = 'WorkerConfigurationError';
+  }
+}
+
 export function requireCalendarConfig() {
   const names = [
     'GOOGLE_CLIENT_ID',
@@ -143,7 +154,7 @@ export function requireCalendarConfig() {
   ] as const;
   const missing = names.filter((name) => !env[name]);
   if (missing.length)
-    throw new Error(
+    throw new WorkerConfigurationError(
       `Missing Calendar worker configuration: ${missing.join(', ')}`,
     );
   return {
@@ -163,12 +174,14 @@ export function requireGmailConfig() {
   const missing: string[] = common.filter((name) => !env[name]);
   if (!env.GMAIL_SENDER_EMAIL) missing.push('GMAIL_SENDER_EMAIL');
   if (missing.length)
-    throw new Error(
+    throw new WorkerConfigurationError(
       `Missing Gmail worker configuration: ${missing.join(', ')}`,
     );
   const senderEmail = env.GMAIL_SENDER_EMAIL!.trim().toLowerCase();
   if (!z.string().email().max(254).safeParse(senderEmail).success) {
-    throw new Error('GMAIL_SENDER_EMAIL must be a valid email address');
+    throw new WorkerConfigurationError(
+      'GMAIL_SENDER_EMAIL must be a valid email address',
+    );
   }
   return {
     clientId: env.GOOGLE_CLIENT_ID!,
