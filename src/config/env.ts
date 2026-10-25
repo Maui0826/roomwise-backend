@@ -52,6 +52,24 @@ const envSchema = z.object({
   ADMIN_NAME: z.string().optional(),
   ADMIN_EMAIL: z.string().optional(),
   ADMIN_PASSWORD: z.string().optional(),
+  /**
+   * Set to 'true' (case-insensitive) on Render Free to run the outbox worker
+   * inside the same Node process as the Express API.
+   * Leave absent or 'false' for local development and when a dedicated
+   * Background Worker is used instead.
+   */
+  RUN_WORKER_IN_WEB: z
+    .string()
+    .transform((v) => v.trim().toLowerCase() === 'true')
+    .default('false'),
+  /**
+   * High-entropy secret (recommended: 64 hex characters / 32 random bytes)
+   * used exclusively to authenticate the machine-to-machine POST
+   * /api/internal/worker/tick endpoint.
+   * Never expose this in VITE_ variables, logs, or API responses.
+   * Leave blank to disable the endpoint.
+   */
+  WORKER_TRIGGER_SECRET: z.string().optional(),
 });
 
 const parsed = envSchema.safeParse(process.env);
