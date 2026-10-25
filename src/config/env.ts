@@ -45,7 +45,12 @@ const envSchema = z.object({
   GOOGLE_CALENDAR_ID: z.string().optional(),
   GMAIL_SENDER_EMAIL: z.string().optional(),
   GOOGLE_AUTH_CLIENT_ID: z.string().optional(),
-  GOOGLE_WORKSPACE_DOMAIN: z.string().trim().toLowerCase().optional(),
+  GOOGLE_WORKSPACE_DOMAIN: z
+    .string()
+    .trim()
+    .toLowerCase()
+    .transform((v) => (v === '' ? undefined : v))
+    .optional(),
   GOOGLE_DIRECTORY_CLIENT_ID: z.string().optional(),
   GOOGLE_DIRECTORY_CLIENT_SECRET: z.string().optional(),
   GOOGLE_DIRECTORY_REFRESH_TOKEN: z.string().optional(),
