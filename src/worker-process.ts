@@ -138,7 +138,10 @@ export function startWorkerProcess(): WorkerHandle {
     async tick() {
       if (stopping || controller.signal.aborted) return;
       if (tickInFlight) {
-        logger.debug({ workerId }, 'Scheduler tick skipped: previous tick in flight');
+        logger.debug(
+          { workerId },
+          'Scheduler tick skipped: previous tick in flight',
+        );
         return;
       }
       tickInFlight = true;
